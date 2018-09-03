@@ -54,3 +54,36 @@ def random_tuner(X, y, pipline, hyper_params, n_iter_search,
         print("\t%s: %r" % (param_name, best_parameters[param_name]))
 
     return model
+
+
+# Classifiers
+def logreg_hype():
+    hyper_params = {'penalty': ['l1', 'l2'],
+                    'class_weight': [None, 'balanced'],
+                    'C': [1e-3, 1e-2, 1e-1, 1.0, 10.]
+                    }
+    return hyper_params
+
+
+def sgd_hype():
+    hyper_params = {'alpha': [1e-2, 1e-3, 1e-4, 1e-5, 1e-7],
+                    'loss': ['hinge', 'log', 'modified_huber',
+                             'squared_hinge', 'perceptron'],
+                    'penalty': ['none', 'l2', 'l1', 'elasticnet']}
+    return hyper_params
+
+
+def svc_hype():
+    hyper_params = {"C": [1e-2, 1e-1, 1.0, 5, 10, 100],
+                    'kernel': ['linear', 'rbf', 'poly'],
+                    "gamma": ['auto', 1e-3, 1e-1, 1],
+                    "class_weight": [None, 'balanced']}
+    return hyper_params
+
+
+def randforest_hype():
+    hyper_params = {"max_depth": [2, 5, 10, None],
+                    "n_estimators": [10, 20, 100, 150],
+                    'max_features': [None, 'auto', 'sqrt', 'log2'],
+                    'class_weight': [None, 'balanced']}
+    return hyper_params
