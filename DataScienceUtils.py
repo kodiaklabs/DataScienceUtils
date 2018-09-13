@@ -1,7 +1,8 @@
 from sklearn.grid_search import RandomizedSearchCV, GridSearchCV
+import time
 
 
-def random_tuner(X, y, pipline, hyper_params, n_iter_search,
+def random_tuner(X, y, pipeline, hyper_params, n_iter_search,
                  scoring_metric):
     """
     This is a quick function to explore different base classifiers.
@@ -36,13 +37,12 @@ def random_tuner(X, y, pipline, hyper_params, n_iter_search,
     scoring_metric = roc_auc
     log_model = random_tuner(X, y, pipeline, hyper_params, n_iter, roc_auc)
     """
-    model = RandomizedSearchCV(pipeline, parameters, n_iter=n_iter_search,
+    model = RandomizedSearchCV(pipeline, hyper_params, n_iter=n_iter_search,
                                n_jobs=-1, verbose=1, scoring=scoring_metric)
 
     start_t = time.time()
-    print('\nTraining multi-output model...')
 
-    model.fit(train_x, train_y)
+    model.fit(X, y)
 
     del_t = time.time() - start_t
     print('Time taken (secs): ', del_t)
@@ -56,7 +56,7 @@ def random_tuner(X, y, pipline, hyper_params, n_iter_search,
     return model
 
 
-def grid_tuner(X, y, pipline, hyper_params, scoring_metric):
+def grid_tuner(X, y, pipeline, hyper_params, scoring_metric):
     """
     Grid search version of random_tuner. For parameter description, see
     documentation of random_tuner.
@@ -66,13 +66,13 @@ def grid_tuner(X, y, pipline, hyper_params, scoring_metric):
 
     [1] http://jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf
     """
-    model = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1,
+    model = GridSearchCV(pipeline, hyper_params, n_jobs=-1, verbose=1,
                          scoring=scoring_metric)
 
     start_t = time.time()
     print('\nTraining multi-output model...')
 
-    model.fit(train_x, train_y)
+    model.fit(X, y)
 
     del_t = time.time() - start_t
     print('Time taken (secs): ', del_t)
@@ -88,9 +88,14 @@ def grid_tuner(X, y, pipline, hyper_params, scoring_metric):
 
 # Classifiers
 def logreg_hype():
+#     'clf__penalty': ('l2', 'l1'),
+#     'clf__class_weight': (None, 'balanced'),
+#     'clf__C': (1e-3, 1e-2, 0.1, 1.0, 10.0, 100.0),
+#     'clf__warm_start': (True, False),
+#     'clf__fit_intercept': (True, False)
     hyper_params = {'penalty': ['l1', 'l2'],
                     'class_weight': [None, 'balanced'],
-                    'C': [1e-3, 1e-2, 1e-1, 1.0, 10.]
+                    'C': [1e-3, 1e-2, 0.1, 1.0, 10.0, 100.0
                     }
     return hyper_params
 
